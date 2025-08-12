@@ -1,20 +1,22 @@
+const Denomination = require('../constants/denomination');
+
 // Mock data
 let envelopes = [
   { id: '1', name: 'Standard', denominations: [
-    { value: '₱20', currency: 'Philippine peso', quantity: 10 },
-    { value: '₱50', currency: 'Philippine peso', quantity: 5 },
-    { value: '₱100', currency: 'Philippine peso', quantity: 7 },
-    { value: '₱200', currency: 'Philippine peso', quantity: 0 },
-    { value: '₱500', currency: 'Philippine peso', quantity: 4 },
-    { value: '₱1000', currency: 'Philippine peso', quantity: 20 },
+    { value: Denomination.PHP.PHP_20, quantity: 0 },
+    { value: Denomination.PHP.PHP_50, quantity: 0 },
+    { value: Denomination.PHP.PHP_100, quantity: 51 },
+    { value: Denomination.PHP.PHP_200, quantity: 0 },
+    { value: Denomination.PHP.PHP_500, quantity: 0 },
+    { value: Denomination.PHP.PHP_1000, quantity: 0 },
   ] },
   { id: '2', name: 'Polymer', denominations: [
-    { value: '₱20', currency: 'Philippine peso', quantity: 0 },
-    { value: '₱50', currency: 'Philippine peso', quantity: 2 },
-    { value: '₱100', currency: 'Philippine peso', quantity: 10 },
-    { value: '₱200', currency: 'Philippine peso', quantity: 1 },
-    { value: '₱500', currency: 'Philippine peso', quantity: 2 },
-    { value: '₱1000', currency: 'Philippine peso', quantity: 25 },
+    { value: Denomination.PHP.PHP_20, quantity: 0 },
+    { value: Denomination.PHP.PHP_50, quantity: 2 },
+    { value: Denomination.PHP.PHP_100, quantity: 9 },
+    { value: Denomination.PHP.PHP_200, quantity: 0 },
+    { value: Denomination.PHP.PHP_500, quantity: 3 },
+    { value: Denomination.PHP.PHP_1000, quantity: 45 },
   ] },
 ];
 

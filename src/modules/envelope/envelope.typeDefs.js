@@ -7,7 +7,6 @@ module.exports = `
 
   type Denomination {
     value: String!
-    currency: String!
     quantity: Int!
   }
 
