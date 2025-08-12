@@ -2,7 +2,13 @@ module.exports = `
   type Envelope {
     id: ID!
     name: String!
-    balance: Float!
+    denominations: [Denomination!]!
+  }
+
+  type Denomination {
+    value: String!
+    currency: String!
+    quantity: Int!
   }
 
   type Query {
@@ -10,7 +16,7 @@ module.exports = `
   }
 
   type Mutation {
-    deposit(id: ID!, amount: Float!): Envelope
-    withdraw(id: ID!, amount: Float!): Envelope
+    deposit(id: ID!, value: String!, quantity: Int!): Envelope
+    withdraw(id: ID!, value: String!, quantity: Int!): Envelope
   }
 `;
