@@ -1,5 +1,5 @@
 import { PrismaClient, TransactionType } from '@prisma/client';
-import { PHP } from '../../src/modules/constants/denomination'
+import PHP from '../../src/modules/constants/denomination'
 
 const prisma = new PrismaClient();
 
