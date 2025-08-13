@@ -36,13 +36,10 @@ model Transaction {
   value             Int
   quantityChange    Int
   timestamp         DateTime            @default(now())
-  denominationChange DenominationChange?
 }
 
 model DenominationChange {
   id             String         @id @default(uuid())
-  transactionId  String         @unique
-  transaction    Transaction    @relation(fields: [transactionId], references: [id])
   previousState  PreviousDenomination[]
   delta          DeltaDenomination?
 }
