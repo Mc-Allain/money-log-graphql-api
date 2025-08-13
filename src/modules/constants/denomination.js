@@ -8,5 +8,4 @@ const Denomination = {
     PHP_1000: 1000,
   }
 };
-
-module.exports = Denomination;
+export default Denomination;

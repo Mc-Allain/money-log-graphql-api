@@ -2,5 +2,4 @@ const TransactionType = {
   DEPOSIT: 'Deposit',
   WITHDRAWAL: 'Withdrawal',
 };
-
-module.exports = TransactionType;
+export default TransactionType;

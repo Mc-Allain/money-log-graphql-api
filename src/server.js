@@ -1,7 +1,7 @@
-const express = require('express');
-const { ApolloServer } = require('apollo-server-express');
-const { schema } = require('./schema');
-const { createContext } = require('./context');
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import { schema } from './schema/index.js';
+import { createContext } from './context.js';
 
 const app = express();
 const server = new ApolloServer({
@@ -9,7 +9,7 @@ const server = new ApolloServer({
   context: createContext,
 });
 
-async function start() {
+const start = async () => {
   await server.start();
   server.applyMiddleware({ app });
   app.listen(4000, () => {
