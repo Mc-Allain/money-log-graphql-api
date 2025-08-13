@@ -1,6 +1,6 @@
 const TransactionType = {
   DEPOSIT: 'Deposit',
-  WITHDRAW: 'Withdraw',
+  WITHDRAWAL: 'Withdrawal',
 };
 
 module.exports = TransactionType;
