@@ -15,7 +15,10 @@ module.exports = `
   }
 
   type Mutation {
-    deposit(id: ID!, value: String!, quantity: Int!): Envelope
-    withdraw(id: ID!, value: String!, quantity: Int!): Envelope
+    envelope(id: ID!): Envelope!
+    calculateTotal(id: ID!): Int!
+    deposit(id: ID!, value: Int!, quantityChange: Int!): TransactionDetails
+    withdraw(id: ID!, value: Int!, quantityChange: Int!): TransactionDetails
+    getDenomChange(transactionId: ID!): DenominationChange!
   }
 `;
