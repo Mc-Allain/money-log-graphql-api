@@ -3,11 +3,46 @@ const Denomination = require('../constants/denomination')
 // Mock data
 
 let transactions = [
-  { id: '1', name: 'Initial Deposit to Standard', transactionType: TransactionType.DEPOSIT, value: Denomination.PHP.PHP_100, quantity: 51},
-  { id: '2', name: 'Initial Deposit to Polymer', transactionType: TransactionType.DEPOSIT, value: Denomination.PHP.PHP_1000, quantity: 45},
-  { id: '3', name: 'Initial Deposit to Polymer', transactionType: TransactionType.DEPOSIT, value: Denomination.PHP.PHP_500, quantity: 3},
-  { id: '4', name: 'Initial Deposit to Polymer', transactionType: TransactionType.DEPOSIT, value: Denomination.PHP.PHP_100, quantity: 9},
-  { id: '5', name: 'Initial Deposit to Polymer', transactionType: TransactionType.DEPOSIT, value: Denomination.PHP.PHP_50, quantity: 2},
+  {
+    id: '1',
+    envelopeId: '1',
+    type: TransactionType.DEPOSIT,
+    value: Denomination.PHP._100,
+    quantityChange: 51,
+    timestamp: "2025-08-13T03:40:31.126Z",
+  },
+  {
+    id: '2',
+    envelopeId: '2',
+    type: TransactionType.DEPOSIT,
+    value: Denomination.PHP._1000,
+    quantityChange: 45,
+    timestamp: "2025-08-13T03:40:31.126Z",
+  },
+  {
+    id: '3',
+    envelopeId: '2',
+    type: TransactionType.DEPOSIT,
+    value: Denomination.PHP._500,
+    quantityChange: 3,
+    timestamp: "2025-08-13T03:40:31.126Z",
+  },
+  {
+    id: '4',
+    envelopeId: '2',
+    type: TransactionType.DEPOSIT,
+    value: Denomination.PHP._100,
+    quantityChange: 9,
+    timestamp: "2025-08-13T03:40:31.126Z",
+  },
+  {
+    id: '5',
+    envelopeId: '2',
+    type: TransactionType.DEPOSIT,
+    value: Denomination.PHP._50,
+    quantityChange: 2,
+    timestamp: "2025-08-13T03:40:31.126Z",
+  },
 ];
 
 module.exports = { transactions };
