@@ -5,6 +5,12 @@ module.exports = `
     denominations: [Denomination!]!
   }
 
+  type DenominationChange {
+    changeId: ID!
+    previousState: [Denomination!]!
+    delta: Denomination!
+  }
+
   type Denomination {
     value: String!
     quantity: Int!
