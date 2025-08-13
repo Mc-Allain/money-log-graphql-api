@@ -2,7 +2,7 @@ import {
   getTransaction,
   getTransactions,
   getTransactionsByEnvelope,
-} from "../services/transaction.service.js";
+} from "./transaction.service.js";
 
 export default transactionResolvers = {
   Query: {

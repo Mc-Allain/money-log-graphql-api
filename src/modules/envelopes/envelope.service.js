@@ -1,7 +1,7 @@
 // envelope.service.js
 import { PrismaClient } from "@prisma/client";
-import { addTransaction } from "./transaction.service.js";
-import TransactionType from "../src/modules/constants/transaction-type.js";
+import { addTransaction } from "../transaction/transaction.service.js";
+import TransactionType from "../constants/transaction-type.js";
 
 const prisma = new PrismaClient();
 
