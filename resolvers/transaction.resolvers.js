@@ -1,16 +1,19 @@
-import { getTransaction, getTransactions, getTransactionsByEnvelope } from "../services/transaction.service.js";
+import {
+  getTransaction,
+  getTransactions,
+  getTransactionsByEnvelope,
+} from "../services/transaction.service.js";
 
-export const Query = {
-  transactions: async () => {
-    return await getTransactions();
+export default transactionResolvers = {
+  Query: {
+    transactions: async () => {
+      return await getTransactions();
+    },
+    transaction: async (transactionId) => {
+      return await getTransaction(transactionId);
+    },
+    transactionByEnvelope: async (envelopeId) => {
+      return await getTransactionsByEnvelope(envelopeId);
+    },
   },
-};
-
-export const Mutation = {
-  transaction: async (_, { transactionId }) => {
-    return await getTransaction(transactionId);
-  },
-  transactionByEnvelope: async (_, { envelopeId }) => {
-    return await getTransactionsByEnvelope(envelopeId);
-  }
 };
