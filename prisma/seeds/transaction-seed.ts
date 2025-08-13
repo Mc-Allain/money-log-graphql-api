@@ -1,15 +1,15 @@
 import { PrismaClient, TransactionType } from '@prisma/client';
-import Denomination from '../../src/modules/constants/denomination';
+import { PHP } from '../../src/modules/constants/denomination'
 
 const prisma = new PrismaClient();
 
-async function main() {
+async function main() {``
   const transactions = [
     {
       id: '1',
       envelopeId: '1',
       type: TransactionType.DEPOSIT,
-      value: Denomination.PHP.PHP_100,
+      value: PHP.PHP_100,
       quantityChange: 51,
       timestamp: new Date("2025-08-13T03:40:31.126Z"),
     },
@@ -17,7 +17,7 @@ async function main() {
       id: '2',
       envelopeId: '2',
       type: TransactionType.DEPOSIT,
-      value: Denomination.PHP.PHP_1000,
+      value: PHP.PHP_1000,
       quantityChange: 45,
       timestamp: new Date("2025-08-13T03:40:31.126Z"),
     },
@@ -25,7 +25,7 @@ async function main() {
       id: '3',
       envelopeId: '2',
       type: TransactionType.DEPOSIT,
-      value: Denomination.PHP.PHP_500,
+      value: PHP.PHP_500,
       quantityChange: 3,
       timestamp: new Date("2025-08-13T03:40:31.126Z"),
     },
@@ -33,7 +33,7 @@ async function main() {
       id: '4',
       envelopeId: '2',
       type: TransactionType.DEPOSIT,
-      value: Denomination.PHP.PHP_100,
+      value: PHP.PHP_100,
       quantityChange: 9,
       timestamp: new Date("2025-08-13T03:40:31.126Z"),
     },
@@ -41,7 +41,7 @@ async function main() {
       id: '5',
       envelopeId: '2',
       type: TransactionType.DEPOSIT,
-      value: Denomination.PHP.PHP_50,
+      value: PHP.PHP_50,
       quantityChange: 2,
       timestamp: new Date("2025-08-13T03:40:31.126Z"),
     },
