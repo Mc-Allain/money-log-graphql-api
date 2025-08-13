@@ -1,52 +1,39 @@
-import { PrismaClient } from "@prisma/client";
-const {
-  getEnvelope,
-  performTransaction,
-  calculateTotal,
-  getDenomChange,
-} = require('./envelope.service');
+import { getEnvelopes, getEnvelope, performTransaction, calculateTotal, getDenomChange } from "./envelope.service.js";
 
-const prisma = new PrismaClient();
-
-module.exports = {
-  Query: {
-    envelopes: async () => {
-      const envelopes = await prisma.envelope.findMany();
-      if (!envelopes || envelopes.length === 0) {
-        throw new Error("No envelopes found");
-      }
-      return envelopes;
-    },
+export const Query = {
+  envelopes: async () => {
+    return await getEnvelopes();
   },
-  Mutation: {
-    envelope: async (_, { envelopeId }) => {
-      return await getEnvelope(envelopeId);
-    },
-    deposit: async (_, { envelopeId, value, quantityChange }) => {
-      const envelope = await getEnvelope(envelopeId);
-      const transaction = await performTransaction(
-        envelope,
-        value,
-        quantityChange,
-        true
-      );
-      return { envelope, transaction };
-    },
-    withdraw: async (_, { envelopeId, value, quantityChange }) => {
-      const envelope = await getEnvelope(envelopeId);
-      const transaction = await performTransaction(
-        envelope,
-        value,
-        quantityChange,
-        false
-      );
-      return { envelope, transaction };
-    },
-    calculateTotal: async (_, { envelopeId }) => {
-      return await calculateTotal(envelopeId);
-    },
-    getDenomChange: async (_, { transactionId }) => {
-      return await getDenomChange(transactionId);
-    },
+};
+
+export const Mutation = {
+  envelope: async (_, { envelopeId }) => {
+    return await getEnvelope(envelopeId);
+  },
+  deposit: async (_, { envelopeId, value, quantityChange }) => {
+    const envelope = await getEnvelope(envelopeId);
+    const transaction = await performTransaction(
+      envelope,
+      value,
+      quantityChange,
+      true
+    );
+    return { envelope, transaction };
+  },
+  withdraw: async (_, { envelopeId, value, quantityChange }) => {
+    const envelope = await getEnvelope(envelopeId);
+    const transaction = await performTransaction(
+      envelope,
+      value,
+      quantityChange,
+      false
+    );
+    return { envelope, transaction };
+  },
+  calculateTotal: async (_, { envelopeId }) => {
+    return await calculateTotal(envelopeId);
+  },
+  denomChange: async (_, { transactionId }) => {
+    return await getDenomChange(transactionId);
   },
 };
