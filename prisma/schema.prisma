@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql" // or "postgresql", "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Envelope {
+  id            String         @id @default(uuid())
+  name          String
+  denominations Denomination[] // One-to-many
+  transactions  Transaction[]  // One-to-many
+}
+
+model Denomination {
+  id         String   @id @default(uuid())
+  value      Int
+  quantity   Int
+  envelopeId String
+  envelope   Envelope @relation(fields: [envelopeId], references: [id])
+}
+
+model Transaction {
+  id                String              @id @default(uuid())
+  envelopeId        String
+  envelope          Envelope            @relation(fields: [envelopeId], references: [id])
+  type              TransactionType
+  value             Int
+  quantityChange    Int
+  timestamp         DateTime            @default(now())
+  denominationChange DenominationChange?
+}
+
+model DenominationChange {
+  id             String         @id @default(uuid())
+  transactionId  String         @unique
+  transaction    Transaction    @relation(fields: [transactionId], references: [id])
+  previousState  PreviousDenomination[]
+  delta          DeltaDenomination?
+}
+
+model PreviousDenomination {
+  id                   String   @id @default(uuid())
+  value                Int
+  quantity             Int
+  denominationChangeId String
+  denominationChange   DenominationChange @relation(fields: [denominationChangeId], references: [id])
+}
+
+model DeltaDenomination {
+  id                   String   @id @default(uuid())
+  value                Int
+  quantity             Int
+  denominationChangeId String   @unique
+  denominationChange   DenominationChange @relation(fields: [denominationChangeId], references: [id])
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+}
+
+enum PHP {
+  PHP_20   @map("20")
+  PHP_50   @map("50")
+  PHP_100  @map("100")
+  PHP_200  @map("200")
+  PHP_500  @map("500")
+  PHP_1000 @map("1000")
+}
