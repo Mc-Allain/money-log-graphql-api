@@ -1,10 +1,10 @@
 // transaction.service.js
 import { PrismaClient } from "@prisma/client";
-const TransactionType = require('../constants/transaction-type');
+import TransactionType from '../constants/transaction-type.js';
 
 const prisma = new PrismaClient();
 
-async function addTransaction({ envelopeId, type, value, quantityChange }) {
+const addTransaction = async ({ envelopeId, type, value, quantityChange }) => {
   if (![TransactionType.DEPOSIT, TransactionType.WITHDRAWAL].includes(type)) {
     throw new Error("Invalid transaction type");
   }
@@ -20,7 +20,7 @@ async function addTransaction({ envelopeId, type, value, quantityChange }) {
   });
 }
 
-async function getTransactions() {
+const getTransactions = async () => {
   const transactions = await prisma.transaction.findMany({
     orderBy: { timestamp: "desc" }, // Order by timestamp descending
   });
@@ -30,9 +30,9 @@ async function getTransactions() {
   return transactions;
 }
 
-async function getTransaction(id) {
+const getTransaction = async (transactionId) => {
   const transaction = await prisma.transaction.findUnique({
-    where: { id },
+    where: { id: transactionId },
   });
   if (!transaction || transaction.length === 0) {
     throw new Error("Transaction not found");
@@ -40,7 +40,7 @@ async function getTransaction(id) {
   return transaction;
 }
 
-async function getTransactionsByEnvelope(envelopeId) {
+const getTransactionsByEnvelope = async (envelopeId) => {
   const transactions = await prisma.transaction.findMany({
     where: { envelopeId },
     orderBy: { timestamp: "desc" },
@@ -51,9 +51,4 @@ async function getTransactionsByEnvelope(envelopeId) {
   return transactions;
 }
 
-module.exports = {
-  addTransaction,
-  getTransactions,
-  getTransaction,
-  getTransactionsByEnvelope,
-};
+export { addTransaction, getTransactions, getTransaction, getTransactionsByEnvelope };

@@ -1,9 +1,17 @@
 // envelope.service.js
 import { PrismaClient } from "@prisma/client";
-const { addTransaction } = require('./transaction.service');
-const TransactionType = require('../src/modules/constants/transaction-type')
+import { addTransaction } from "./transaction.service.js";
+import TransactionType from "../src/modules/constants/transaction-type.js";
 
 const prisma = new PrismaClient();
+
+const getEnvelopes = async () => {
+  const envelopes = await prisma.envelope.findMany();
+  if (!envelopes || envelopes.length === 0) {
+    throw new Error("No envelopes found");
+  }
+  return envelopes;
+};
 
 const getEnvelope = async (envelopeId) => {
   const envelope = await prisma.envelope.findUnique({
@@ -40,11 +48,15 @@ const performTransaction = async (
     throw new Error("Transaction could not be created");
   }
 
-  await addDenominationChange(
+  const denominationChange = await addDenominationChange(
     transaction.id,
     previousState,
     updatedDenomination
   );
+
+  if (!denominationChange) {
+    throw new Error("Denomination change could not be recorded");
+  }
 
   return transaction;
 };
@@ -64,7 +76,7 @@ const calculateTotal = async (envelopeId) => {
 };
 
 const getDenomChange = async (transactionId) => {
-  const change = prisma.denominationChange.findFirst({
+  const change = await prisma.denominationChange.findFirst({
     where: { changeId: transactionId },
   });
   if (!change) {
@@ -80,7 +92,7 @@ const updateDenomination = async ({
   isDeposit = true,
 }) => {
   const denom = await prisma.denomination.findFirst({
-    where: { envelopeId },
+    where: { envelopeId, value },
   });
 
   if (!denom) throw new Error("Denomination not found");
@@ -119,9 +131,4 @@ const addDenominationChange = async (changeId, previousState, delta) => {
   });
 };
 
-module.exports = {
-  getEnvelope,
-  performTransaction,
-  calculateTotal,
-  getDenomChange,
-};
+export { getEnvelopes, getEnvelope, performTransaction, calculateTotal, getDenomChange };
