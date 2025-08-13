@@ -23,6 +23,30 @@ const getEnvelope = async (envelopeId) => {
   return envelope;
 };
 
+const calculateTotal = async (envelopeId) => {
+  const denominations = await prisma.denomination.findMany({
+    where: { envelopeId },
+  });
+
+  if (!denominations || denominations.length === 0) {
+    throw new Error("No denominations found for this envelope");
+  }
+
+  return denominations.reduce((sum, entry) => {
+    return sum + entry.value * entry.quantity;
+  }, 0);
+};
+
+const getDenomChange = async (transactionId) => {
+  const change = await prisma.denominationChange.findFirst({
+    where: { changeId: transactionId },
+  });
+  if (!change) {
+    throw new Error("No envelope changes found for this transaction");
+  }
+  return change[0];
+};
+
 const performTransaction = async (
   envelope,
   value,
@@ -59,30 +83,6 @@ const performTransaction = async (
   }
 
   return transaction;
-};
-
-const calculateTotal = async (envelopeId) => {
-  const denominations = await prisma.denomination.findMany({
-    where: { envelopeId },
-  });
-
-  if (!denominations || denominations.length === 0) {
-    throw new Error("No denominations found for this envelope");
-  }
-
-  return denominations.reduce((sum, entry) => {
-    return sum + entry.value * entry.quantity;
-  }, 0);
-};
-
-const getDenomChange = async (transactionId) => {
-  const change = await prisma.denominationChange.findFirst({
-    where: { changeId: transactionId },
-  });
-  if (!change) {
-    throw new Error("No envelope changes found for this transaction");
-  }
-  return change[0];
 };
 
 const updateDenomination = async ({
