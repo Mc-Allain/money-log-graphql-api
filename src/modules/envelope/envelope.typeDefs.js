@@ -16,6 +16,11 @@ module.exports = `
     quantity: Int!
   }
 
+  type TransactionDetails {
+    envelope: Envelope!
+    transaction: Transaction!
+  }
+
   type Query {
     envelopes: [Envelope!]!
   }
