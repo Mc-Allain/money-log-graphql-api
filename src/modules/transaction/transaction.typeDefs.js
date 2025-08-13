@@ -1,10 +1,11 @@
 module.exports = `
   type Transaction {
     id: ID!
-    name: String!
-    transactionType: String!
-    value: String!
-    quantity: Int!
+    envelopeId: ID!
+    type: String!
+    value: Int!
+    quantityChange: Int!
+    timestamp: String!
   }
 
   type Query {
@@ -12,6 +13,7 @@ module.exports = `
   }
 
   type Mutation {
-    logTransaction(id: ID!, name: String!, transactionType: String!, value: String!, quantity: Int!): Transaction
+    getTransaction(id: ID!): Transaction
+    getTransactionsByEnvelope(envelopeId: ID!): [Transaction!]!
   }
 `;
