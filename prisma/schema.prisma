@@ -33,31 +33,25 @@ model Transaction {
   envelopeId        String
   envelope          Envelope            @relation(fields: [envelopeId], references: [id])
   type              TransactionType
-  value             Int
-  quantityChange    Int
+  previousState     PreviousDenomination[]
+  delta             DeltaDenomination?
   timestamp         DateTime            @default(now())
-}
-
-model DenominationChange {
-  id             String         @id @default(uuid())
-  previousState  PreviousDenomination[]
-  delta          DeltaDenomination?
 }
 
 model PreviousDenomination {
   id                   String   @id @default(uuid())
   value                Int
   quantity             Int
-  denominationChangeId String
-  denominationChange   DenominationChange @relation(fields: [denominationChangeId], references: [id])
+  transactionId        String
+  transaction          Transaction @relation(fields: [transactionId], references: [id])
 }
 
 model DeltaDenomination {
   id                   String   @id @default(uuid())
   value                Int
   quantity             Int
-  denominationChangeId String   @unique
-  denominationChange   DenominationChange @relation(fields: [denominationChangeId], references: [id])
+  transactionId        String   @unique
+  transaction          Transaction @relation(fields: [transactionId], references: [id])
 }
 
 enum TransactionType {
@@ -65,11 +59,11 @@ enum TransactionType {
   WITHDRAWAL
 }
 
-enum PHP {
-  PHP_20   @map("20")
-  PHP_50   @map("50")
-  PHP_100  @map("100")
-  PHP_200  @map("200")
-  PHP_500  @map("500")
-  PHP_1000 @map("1000")
+enum DenominationLabel {
+  PHP_20
+  PHP_50
+  PHP_100
+  PHP_200
+  PHP_500
+  PHP_1000
 }
