@@ -1,33 +1,53 @@
-import { PrismaClient, TransactionType } from '@prisma/client';
-import Denomination from '../src/modules/constants/denomination'
+import { PrismaClient, TransactionType } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function main() {
+const DenominationValueMap = {
+  PHP_20: 20,
+  PHP_50: 50,
+  PHP_100: 100,
+  PHP_200: 200,
+  PHP_500: 500,
+  PHP_1000: 1000,
+} as const;
+
+const main = async () => {
   // Seed envelopes with denominations
-  const envelopes = [
+
+  type DenominationEntry = {
+    value: number;
+    quantity: number;
+  };
+
+  type Envelope = {
+    id: string;
+    name: string;
+    denominations: DenominationEntry[];
+  };
+
+  const envelopes: Envelope[] = [
     {
-      id: '1',
-      name: 'Standard',
+      id: "1",
+      name: "Standard",
       denominations: [
-        { value: Denomination.PHP.PHP_20, quantity: 0 },
-        { value: Denomination.PHP.PHP_50, quantity: 0 },
-        { value: Denomination.PHP.PHP_100, quantity: 51 },
-        { value: Denomination.PHP.PHP_200, quantity: 0 },
-        { value: Denomination.PHP.PHP_500, quantity: 0 },
-        { value: Denomination.PHP.PHP_1000, quantity: 0 },
+        { value: DenominationValueMap.PHP_20, quantity: 0 },
+        { value: DenominationValueMap.PHP_50, quantity: 0 },
+        { value: DenominationValueMap.PHP_100, quantity: 51 },
+        { value: DenominationValueMap.PHP_200, quantity: 0 },
+        { value: DenominationValueMap.PHP_500, quantity: 0 },
+        { value: DenominationValueMap.PHP_1000, quantity: 0 },
       ],
     },
     {
-      id: '2',
-      name: 'Polymer',
+      id: "2",
+      name: "Polymer",
       denominations: [
-        { value: Denomination.PHP.PHP_20, quantity: 0 },
-        { value: Denomination.PHP.PHP_50, quantity: 2 },
-        { value: Denomination.PHP.PHP_100, quantity: 9 },
-        { value: Denomination.PHP.PHP_200, quantity: 0 },
-        { value: Denomination.PHP.PHP_500, quantity: 3 },
-        { value: Denomination.PHP.PHP_1000, quantity: 45 },
+        { value: DenominationValueMap.PHP_20, quantity: 0 },
+        { value: DenominationValueMap.PHP_50, quantity: 2 },
+        { value: DenominationValueMap.PHP_100, quantity: 9 },
+        { value: DenominationValueMap.PHP_200, quantity: 0 },
+        { value: DenominationValueMap.PHP_500, quantity: 3 },
+        { value: DenominationValueMap.PHP_1000, quantity: 45 },
       ],
     },
   ];
@@ -38,138 +58,97 @@ async function main() {
         id: envelope.id,
         name: envelope.name,
         denominations: {
-          create: envelope.denominations.map(d => ({
-            value: d.value,
-            quantity: d.quantity,
-          })),
+          create: envelope.denominations,
         },
       },
     });
   }
 
-  // Seed denomination changes
-  const denominationChangeList = [
-    {
-      changeId: '1',
-      previousState: [
-        { value: Denomination.PHP.PHP_20, quantity: 0 },
-        { value: Denomination.PHP.PHP_50, quantity: 0 },
-        { value: Denomination.PHP.PHP_100, quantity: 0 },
-        { value: Denomination.PHP.PHP_200, quantity: 0 },
-        { value: Denomination.PHP.PHP_500, quantity: 0 },
-        { value: Denomination.PHP.PHP_1000, quantity: 0 },
-      ],
-      delta: { value: Denomination.PHP.PHP_100, quantity: 51 },
-    },
-    {
-      changeId: '2',
-      previousState: [
-        { value: Denomination.PHP.PHP_20, quantity: 0 },
-        { value: Denomination.PHP.PHP_50, quantity: 0 },
-        { value: Denomination.PHP.PHP_100, quantity: 0 },
-        { value: Denomination.PHP.PHP_200, quantity: 0 },
-        { value: Denomination.PHP.PHP_500, quantity: 0 },
-        { value: Denomination.PHP.PHP_1000, quantity: 0 },
-      ],
-      delta: { value: Denomination.PHP.PHP_1000, quantity: 45 },
-    },
-    {
-      changeId: '3',
-      previousState: [
-        { value: Denomination.PHP.PHP_20, quantity: 0 },
-        { value: Denomination.PHP.PHP_50, quantity: 0 },
-        { value: Denomination.PHP.PHP_100, quantity: 0 },
-        { value: Denomination.PHP.PHP_200, quantity: 0 },
-        { value: Denomination.PHP.PHP_500, quantity: 0 },
-        { value: Denomination.PHP.PHP_1000, quantity: 45 },
-      ],
-      delta: { value: Denomination.PHP.PHP_500, quantity: 3 },
-    },
-    {
-      changeId: '4',
-      previousState: [
-        { value: Denomination.PHP.PHP_20, quantity: 0 },
-        { value: Denomination.PHP.PHP_50, quantity: 0 },
-        { value: Denomination.PHP.PHP_100, quantity: 0 },
-        { value: Denomination.PHP.PHP_200, quantity: 0 },
-        { value: Denomination.PHP.PHP_500, quantity: 3 },
-        { value: Denomination.PHP.PHP_1000, quantity: 45 },
-      ],
-      delta: { value: Denomination.PHP.PHP_100, quantity: 9 },
-    },
-    {
-      changeId: '5',
-      previousState: [
-        { value: Denomination.PHP.PHP_20, quantity: 0 },
-        { value: Denomination.PHP.PHP_50, quantity: 0 },
-        { value: Denomination.PHP.PHP_100, quantity: 9 },
-        { value: Denomination.PHP.PHP_200, quantity: 0 },
-        { value: Denomination.PHP.PHP_500, quantity: 3 },
-        { value: Denomination.PHP.PHP_1000, quantity: 45 },
-      ],
-      delta: { value: Denomination.PHP.PHP_50, quantity: 2 },
-    },
-  ];
+  // Seed transactions
 
-  for (const change of denominationChangeList) {
-    await prisma.denominationChange.create({
-      data: {
-        id: change.changeId,
-        previousState: {
-          create: change.previousState.map(d => ({
-            value: d.value,
-            quantity: d.quantity,
-          })),
-        },
-        delta: {
-          create: {
-            value: change.delta.value,
-            quantity: change.delta.quantity,
-          },
-        },
-      },
-    });
-  }
+  type Transaction = {
+    id: string;
+    envelopeId: string;
+    type: TransactionType;
+    previousState: DenominationEntry[];
+    delta: DenominationEntry;
+    timestamp: Date;
+  };
 
-  const transactions = [
+  const transactions: Transaction[] = [
     {
-      id: '1',
-      envelopeId: '1',
+      id: "1",
+      envelopeId: "1",
       type: TransactionType.DEPOSIT,
-      value: Denomination.PHP.PHP_100,
-      quantityChange: 51,
+      previousState: [
+        { value: DenominationValueMap.PHP_20, quantity: 0 },
+        { value: DenominationValueMap.PHP_50, quantity: 0 },
+        { value: DenominationValueMap.PHP_100, quantity: 0 },
+        { value: DenominationValueMap.PHP_200, quantity: 0 },
+        { value: DenominationValueMap.PHP_500, quantity: 0 },
+        { value: DenominationValueMap.PHP_1000, quantity: 0 },
+      ],
+      delta: { value: DenominationValueMap.PHP_100, quantity: 51 },
       timestamp: new Date("2025-08-13T03:40:31.126Z"),
     },
     {
-      id: '2',
-      envelopeId: '2',
+      id: "2",
+      envelopeId: "2",
       type: TransactionType.DEPOSIT,
-      value: Denomination.PHP.PHP_1000,
-      quantityChange: 45,
+      previousState: [
+        { value: DenominationValueMap.PHP_20, quantity: 0 },
+        { value: DenominationValueMap.PHP_50, quantity: 0 },
+        { value: DenominationValueMap.PHP_100, quantity: 0 },
+        { value: DenominationValueMap.PHP_200, quantity: 0 },
+        { value: DenominationValueMap.PHP_500, quantity: 0 },
+        { value: DenominationValueMap.PHP_1000, quantity: 0 },
+      ],
+      delta: { value: DenominationValueMap.PHP_1000, quantity: 45 },
       timestamp: new Date("2025-08-13T03:40:31.126Z"),
     },
     {
-      id: '3',
-      envelopeId: '2',
+      id: "3",
+      envelopeId: "2",
       type: TransactionType.DEPOSIT,
-      value: Denomination.PHP.PHP_500,
-      quantityChange: 3,
+      previousState: [
+        { value: DenominationValueMap.PHP_20, quantity: 0 },
+        { value: DenominationValueMap.PHP_50, quantity: 0 },
+        { value: DenominationValueMap.PHP_100, quantity: 0 },
+        { value: DenominationValueMap.PHP_200, quantity: 0 },
+        { value: DenominationValueMap.PHP_500, quantity: 0 },
+        { value: DenominationValueMap.PHP_1000, quantity: 45 },
+      ],
+      delta: { value: DenominationValueMap.PHP_500, quantity: 3 },
       timestamp: new Date("2025-08-13T03:40:31.126Z"),
     },
     {
-      id: '4',
-      envelopeId: '2',
+      id: "4",
+      envelopeId: "2",
       type: TransactionType.DEPOSIT,
-      value: Denomination.PHP.PHP_100,
-      quantityChange: 9,
+      previousState: [
+        { value: DenominationValueMap.PHP_20, quantity: 0 },
+        { value: DenominationValueMap.PHP_50, quantity: 0 },
+        { value: DenominationValueMap.PHP_100, quantity: 0 },
+        { value: DenominationValueMap.PHP_200, quantity: 0 },
+        { value: DenominationValueMap.PHP_500, quantity: 3 },
+        { value: DenominationValueMap.PHP_1000, quantity: 45 },
+      ],
+      delta: { value: DenominationValueMap.PHP_100, quantity: 9 },
       timestamp: new Date("2025-08-13T03:40:31.126Z"),
     },
     {
-      id: '5',
-      envelopeId: '2',
+      id: "5",
+      envelopeId: "2",
       type: TransactionType.DEPOSIT,
-      value: Denomination.PHP.PHP_50,
-      quantityChange: 2,
+      previousState: [
+        { value: DenominationValueMap.PHP_20, quantity: 0 },
+        { value: DenominationValueMap.PHP_50, quantity: 0 },
+        { value: DenominationValueMap.PHP_100, quantity: 9 },
+        { value: DenominationValueMap.PHP_200, quantity: 0 },
+        { value: DenominationValueMap.PHP_500, quantity: 3 },
+        { value: DenominationValueMap.PHP_1000, quantity: 45 },
+      ],
+      delta: { value: DenominationValueMap.PHP_50, quantity: 2 },
       timestamp: new Date("2025-08-13T03:40:31.126Z"),
     },
   ];
@@ -180,14 +159,20 @@ async function main() {
         id: tx.id,
         envelopeId: tx.envelopeId,
         type: tx.type,
-        value: tx.value,
-        quantityChange: tx.quantityChange,
+        previousState: {
+          create: tx.previousState,
+        },
+        delta: tx.delta
+          ? {
+              create: tx.delta,
+            }
+          : undefined,
         timestamp: tx.timestamp,
       },
     });
   }
-}
+};
 
 main()
-  .catch(e => console.error(e))
+  .catch((e) => console.error(e))
   .finally(() => prisma.$disconnect());
